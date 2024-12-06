@@ -4,14 +4,16 @@
 #include <thread>
 #include <conio.h>
 
-#define MUL 2
 using namespace std;
 
+short MUL = 2;
 int screenPointer = 0;
 char screenRam[4096];
+Camera2D cam1;
 
 void screenDraw(char screenRam[]) {
 	InitWindow(640 * MUL, 400 * MUL, "Hello");
+	//InitWindow(0, 0,"");
 	SetTargetFPS(60);
 
 	for (int i = 0; i < 4096; i++) {
@@ -76,19 +78,33 @@ int main() {
 
 	thread t1(screenDraw,screenRam);
 	t1.detach();
-	WaitTime(0.5);
+	_Thrd_sleep_for(500);
 	
 	for (int i = 0; i < 4096; i++) {
 		screenRam[i] = 0;
 	}
-	while (1) {
-		WaitTime(0.005);
+	while (0) {
+		_Thrd_sleep_for(5);
 		printChar(GetRandomValue(126,127));
 	}
 	while (0) {
 		int inp;
 		inp = _getch(); 
 		
+		/*while (!(inp = GetKeyPressed())) {
+			_Thrd_sleep_for(1);
+
+			if (IsKeyPressed(257)) {
+				screenPointer = ((screenPointer / 80) + 1) * 80;
+			}
+			else if (IsKeyPressed(259)) {
+				if (screenPointer > 0) {
+					screenRam[--screenPointer] = 0;
+				}
+			}
+		}*/
+
+
 		if (inp == 13) {
 			screenPointer = ((screenPointer / 80) + 1) * 80;
 		}
@@ -102,5 +118,10 @@ int main() {
 		}
 	}
 
-	system("pause");
+	while (1) {
+		if (IsGamepadAvailable(0)) {
+			cout << GetGamepadButtonPressed() << " " << GetGamepadAxisMovement(0,0) << " " << GetGamepadAxisMovement(0, 1) << " " << GetGamepadAxisMovement(0, 2) << " " << GetGamepadAxisMovement(0, 3) << " " << GetGamepadAxisMovement(0, 4) << " " << GetGamepadAxisMovement(0, 5) << endl;
+			//SetgamepadVibration();
+		}
+	}
 }
